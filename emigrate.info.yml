@@ -1,0 +1,6 @@
+name: Emigrate
+description: Export Drupal structures and data to a portable format
+package: Emigrate
+
+type: module
+core_version_requirement: 9.x

@@ -1,0 +1,12 @@
+emigrate.json:
+  path: '/node/{node}/emigrate/json'
+  defaults:
+    _title: 'Emigrate JSON'
+    _controller: 'Drupal\emigrate\Controller\ViewJson:json'
+  requirements:
+    node: \d+
+    _permission: 'access content' 
+  options:
+    parameters:
+      node:
+        type: entity:node
