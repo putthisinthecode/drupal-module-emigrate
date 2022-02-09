@@ -1,0 +1,5 @@
+services:
+  emigrate.commands:
+    class: \Drupal\emigrate\Commands\Commands
+    tags:
+      - { name: drush.command }

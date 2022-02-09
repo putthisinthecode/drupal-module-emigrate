@@ -14,13 +14,15 @@ class Link extends DefaultField
   {
     $data = NULL;
 
-    if (!$this->element->isEmpty()) {
-      $link = $this->element->first();
-      $uri = $link->getUrl();
-      $data = [
-        'uri' => $uri->getUri(),
-        'title' => $link->title,
-      ];
+    if (!$this->isEmpty()) {
+      $link = $this->element->get(0);
+      if ($link->isExternal()) {
+        $uri = $link->getUrl();
+        $data = [
+          'uri' => $uri->getUri(),
+          'title' => $link->title,
+        ];
+      }
     }
     return $data;
   }

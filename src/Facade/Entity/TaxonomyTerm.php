@@ -20,6 +20,7 @@ class TaxonomyTerm extends DefaultEntity
       'id' => $this->element->id(),
       'title' => $this->element->getName(),
       'description' => $this->element->getDescription(),
+      'vocabulary' => $this->element->bundle(),
     ];
   }
 }

@@ -2,9 +2,12 @@
 
 namespace Drupal\emigrate\Facade\Entity;
 
-class DefaultEntity extends \Drupal\emigrate\Facade\FacadeBase
+use Drupal\emigrate\Facade\FacadeBase;
+
+class DefaultEntity extends FacadeBase
 {
-  public function getData() {
+  public function getData()
+  {
     return $this->prepareDataAtIndex(0);
   }
 
@@ -13,15 +16,17 @@ class DefaultEntity extends \Drupal\emigrate\Facade\FacadeBase
     // TODO: Implement getId() method.
   }
 
-  public function prepareDataAtIndex(int $index)
-  {
-    // TODO: Implement getData() method.
-  }
-
   public function getInlineData()
   {
     return [
       'title' => $this->element->getTitle()
     ];
   }
+
+  public function getType(): string
+  {
+    return $this->element->bundle();
+  }
+
+
 }

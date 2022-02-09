@@ -7,13 +7,13 @@ use Drupal\emigrate\Facade\FacadeFactory;
 
 class DefaultField extends FacadeBase
 {
-  public function getData() {
+  public function getData()
+  {
     if ($this->getCardinality() == 1) {
       $data = $this->prepareDataAtIndex(0);
-    }
-    else {
+    } else {
       $data = [];
-      foreach($this->element as $index =>$entry) {
+      foreach ($this->element as $index => $entry) {
         $data[$index] = $this->prepareDataAtIndex($index);
       }
     }
@@ -35,7 +35,7 @@ class DefaultField extends FacadeBase
     $this->element->setValue($data);
   }
 
-  public function getType()
+  public function getType(): string
   {
     return $this->element->getFieldDefinition()->getType();
   }
@@ -68,6 +68,14 @@ class DefaultField extends FacadeBase
   public function getCardinality()
   {
     return $this->getStorageDefinition()->getCardinality();
+  }
+
+  /**
+   * @return mixed
+   */
+  public function isEmpty()
+  {
+    return $this->element->isEmpty();
   }
 
 }

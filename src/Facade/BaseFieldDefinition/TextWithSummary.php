@@ -6,10 +6,13 @@ class TextWithSummary extends DefaultField
 {
   public function prepareDataAtIndex(int $index)
   {
+    $content = $this->element->get(0);
+
     return [
       'type' => $this->element->getFieldDefinition()->getType(),
       'format' => $this->element->format,
-      'text' => $this->element->first()->value,
+      'text' => $content->value,
+      'summary' => $content->summary,
     ];
   }
 

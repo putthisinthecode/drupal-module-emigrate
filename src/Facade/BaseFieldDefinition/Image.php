@@ -6,6 +6,9 @@ class Image extends DefaultField
 {
   public function prepareDataAtIndex(int $index)
   {
+    /**
+     * @TODO : Should return NULL when empty and cardinality is 1
+     */
     $data = [];
 
     $referencedEntities = $this->element->referencedEntities();
@@ -16,10 +19,9 @@ class Image extends DefaultField
 
       $data = [
         'id' => $file->id(),
-        'uri' => $file->getFileUri(),
+        'uri' => $this->removeFilePathPrefix($file->getFileUri()),
         'name' => $file->getFilename(),
       ];
-
     }
 
     return $data;
@@ -43,4 +45,16 @@ class Image extends DefaultField
 
   }
 
+  private function removeFilePAthPrefix($filePath) {
+    /**
+     * @TODO : support public/private files
+     */
+    $prefix = 'public://';
+
+    if (substr($filePath, 0, strlen($prefix)) == $prefix) {
+      $filePath = substr($filePath, strlen($prefix));
+    }
+
+    return $filePath;
+  }
 }

@@ -20,7 +20,8 @@ class FacadeFactory
   const OBJECT_CLASS_MAPPING = [
     'Drupal\node\Entity\Node' => Node::class,
     'Drupal\Core\Field\BaseFieldDefinition' => DefaultField::class,
-    'Drupal\taxonomy\Entity\Term' => TaxonomyTerm::class
+    'Drupal\taxonomy\Entity\Term' => TaxonomyTerm::class,
+    'Drupal\comment\Entity\Comment' => \Drupal\emigrate\Facade\Entity\Comment::class
   ];
 
   const FIELD_TYPE_CLASS_MAPPING = [

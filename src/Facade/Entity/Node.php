@@ -33,8 +33,8 @@ class Node extends DefaultEntity
     foreach ($fields as $fieldKey => $field) {
       $fieldFacade = FacadeFactory::createFromEntityFieldItem($this->element, $fieldKey);
       $fieldData = $fieldFacade->getData();
-      $data[$fieldKey] = $fieldData;
 
+      $data[$fieldKey] = $fieldData;
     }
 
     return $data;
@@ -54,12 +54,12 @@ class Node extends DefaultEntity
 
   public function getId()
   {
-    return $this->element->id();
+    return (int) $this->element->id();
   }
 
   public function getLanguage()
   {
-    $language = $this->element->language();
+    $language = $this->element->language() ;
 
     return $language->getId();
   }
