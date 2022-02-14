@@ -2,17 +2,18 @@
 namespace Drupal\emigrate\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\emigrate\Emigrate;
 use Drupal\node\NodeInterface;
 use Drupal\emigrate\Facade\FacadeFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ViewJson extends ControllerBase {
   public function json(NodeInterface $node) {
-    $facadeFactory = FacadeFactory::getDefaultFactory();
-    $nodeFacade = $facadeFactory->createFromEntity($node);
+    $emigrate = new Emigrate(DRUPAL_ROOT . '/..');
+    $exported = $emigrate->exportEntity($node);
 
     $response = new JsonResponse(
-      $nodeFacade->getData()
+      $exported
     );
     return $response;
   }

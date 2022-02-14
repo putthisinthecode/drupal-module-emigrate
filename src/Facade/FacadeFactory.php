@@ -21,7 +21,10 @@ class FacadeFactory {
     'link' => Link::class,
   ];
 
-  private static $defaultFactory = NULL;
+  /**
+   * @var self
+   */
+  private static $defaultFactory;
 
   private $configuration;
 
@@ -38,6 +41,9 @@ class FacadeFactory {
     return static::$defaultFactory;
   }
 
+  /**
+   * @return FacadeFactory
+   */
   public static function getDefaultFactory() {
     return static::$defaultFactory;
   }

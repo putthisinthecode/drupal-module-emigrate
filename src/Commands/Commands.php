@@ -2,10 +2,7 @@
 
 namespace Drupal\emigrate\Commands;
 
-use Drupal\emigrate\Configuration;
-use Drupal\emigrate\Facade\FacadeFactory;
-use Drupal\emigrate\Writer\FilesTree;
-use Drupal\node\Entity\Node;
+use Drupal\emigrate\Emigrate;
 use Drush\Commands\DrushCommands;
 
 /**
@@ -26,26 +23,11 @@ class Commands extends DrushCommands {
    * @aliases em:ex
    */
   public function export() {
-    $this->loadConfiguration();
-    FacadeFactory::init($this->configuration);
-    $facadeFactory = FacadeFactory::getDefaultFactory();
-    $nids = \Drupal::entityQuery('node')->execute();
-    $writer = new FilesTree([
-      'destination' => $this->getCurrentDirectory(),
-    ]);
-    foreach (Node::loadMultiple($nids) as $node) {
-      $exporter = $facadeFactory->createFromEntity($node);
-      $writer->add($exporter);
-    }
-    $writer->write();
+    $emigrate = new Emigrate($this->getCurrentDirectory());
+
+    $emigrate->export();
   }
 
-  /**
-   * @return void
-   */
-  public function loadConfiguration() {
-    $this->configuration = Configuration::loadFromFile($this->getCurrentDirectory() . "/emigrate.toml");
-  }
 
   /**
    * @return mixed
