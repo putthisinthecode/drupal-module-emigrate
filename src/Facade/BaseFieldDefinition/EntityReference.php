@@ -18,7 +18,7 @@ class EntityReference extends DefaultField
     $referencedEntities = $this->element->referencedEntities();
     if (count($referencedEntities) > 0) {
       $referencedEntity = $referencedEntities[$index];
-      $referencedEntityFacade = FacadeFactory::createFromEntity($referencedEntity);
+      $referencedEntityFacade = FacadeFactory::getDefaultFactory()->createFromEntity($referencedEntity);
       $data = $referencedEntityFacade->getInlineData();
     }
 

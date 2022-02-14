@@ -2,13 +2,14 @@
 
 namespace Drupal\emigrate\Facade;
 
-interface FacadeInterface
-{
+interface FacadeInterface {
+
   public function getId();
 
   public function getData();
 
-  public function getDebugData(): array;
+  public function getDebugData();
 
-  public function getType(): string;
+  public function getType();
+
 }

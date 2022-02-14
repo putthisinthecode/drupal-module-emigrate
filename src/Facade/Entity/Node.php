@@ -2,22 +2,21 @@
 
 namespace Drupal\emigrate\Facade\Entity;
 
+use Drupal\emigrate\Configuration;
 use Drupal\emigrate\Facade\BaseFieldDefinition\DefaultField;
 use Drupal\emigrate\Facade\FacadeBase;
 use Drupal\emigrate\Facade\FacadeFactory;
 
-class Node extends DefaultEntity
-{
-  const EXCLUDED_FIELD = ['nid', 'uuid', 'vid', 'revision_uid', 'revision_log', 'revision_timestamp', 'langcode', 'type', 'status', 'uid', 'promote', 'sticky', 'default_langcode',
-    'revision_default', 'revision_translation_affected', 'path'];
+class Node extends DefaultEntity {
 
-  static protected function fieldShouldBeExported($field): bool
-  {
-    return !in_array($field, self::EXCLUDED_FIELD);
+  protected function fieldShouldBeExported($field) {
+    $configuration = Configuration::getDefaultConfiguration();
+    $bundleConfiguration = $configuration->getConfigurationForEntityBundle($this->element->getEntityTypeID(), $this->element->bundle());
+    $excludedField = $bundleConfiguration['exclude_fields'];
+    return !in_array($field, $excludedField);
   }
 
-  public function prepareDataAtIndex(int $index): array
-  {
+  public function prepareDataAtIndex(int $index) {
     $fields = $this->getFieldsToExport();
 
     $data = [
@@ -42,30 +41,32 @@ class Node extends DefaultEntity
 
   /**
    * @param $fields
+   *
    * @return array
    */
-  public function getFieldsToExport(): array
-  {
+  public function getFieldsToExport() {
     $entityFieldManager = \Drupal::service('entity_field.manager');
     $fields = $entityFieldManager->getFieldDefinitions('node', $this->element->bundle());
 
-    return array_filter($fields, [$this, 'fieldShouldBeExported'], ARRAY_FILTER_USE_KEY);
+    return array_filter($fields, [
+      $this,
+      'fieldShouldBeExported',
+    ], ARRAY_FILTER_USE_KEY);
   }
 
-  public function getId()
-  {
+  public function getId() {
     return (int) $this->element->id();
   }
 
-  public function getLanguage()
-  {
-    $language = $this->element->language() ;
+  public function getLanguage() {
+    $language = $this->element->language();
 
     return $language->getId();
   }
 
   public function getSlug() {
-    $alias = \Drupal::service('path_alias.manager')->getAliasByPath('/node/'.$this->element->id());
+    $alias = \Drupal::service('path_alias.manager')
+      ->getAliasByPath('/node/' . $this->element->id());
 
     return $alias;
   }

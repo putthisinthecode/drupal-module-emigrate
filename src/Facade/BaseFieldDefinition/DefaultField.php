@@ -5,13 +5,13 @@ namespace Drupal\emigrate\Facade\BaseFieldDefinition;
 use Drupal\emigrate\Facade\FacadeBase;
 use Drupal\emigrate\Facade\FacadeFactory;
 
-class DefaultField extends FacadeBase
-{
-  public function getData()
-  {
+class DefaultField extends FacadeBase {
+
+  public function getData() {
     if ($this->getCardinality() == 1) {
       $data = $this->prepareDataAtIndex(0);
-    } else {
+    }
+    else {
       $data = [];
       foreach ($this->element as $index => $entry) {
         $data[$index] = $this->prepareDataAtIndex($index);
@@ -20,61 +20,51 @@ class DefaultField extends FacadeBase
     return $data;
   }
 
-  public function prepareDataAtIndex(int $index)
-  {
+  public function prepareDataAtIndex(int $index) {
     return $this->element->value;
   }
 
-  public function getId()
-  {
+  public function getId() {
     return $this->element->getName();
   }
 
-  public function setData($data)
-  {
+  public function setData($data) {
     $this->element->setValue($data);
   }
 
-  public function getType(): string
-  {
+  public function getType() {
     return $this->element->getFieldDefinition()->getType();
   }
 
-  public function getDebugData(): array
-  {
+  public function getDebugData() {
     return [
-      'type' => $this->getType()
+      'type' => $this->getType(),
     ];
   }
 
-  public function getStorageDefinition()
-  {
+  public function getStorageDefinition() {
     return $this->getFieldDefinition()->getFieldStorageDefinition();
   }
 
-  public function getSettings()
-  {
+  public function getSettings() {
     return $this->getFieldDefinition()->getSettings();
   }
 
-  public function getFieldDefinition()
-  {
+  public function getFieldDefinition() {
     return $this->element->getFieldDefinition();
   }
 
   /**
    * @return mixed
    */
-  public function getCardinality()
-  {
+  public function getCardinality() {
     return $this->getStorageDefinition()->getCardinality();
   }
 
   /**
    * @return mixed
    */
-  public function isEmpty()
-  {
+  public function isEmpty() {
     return $this->element->isEmpty();
   }
 

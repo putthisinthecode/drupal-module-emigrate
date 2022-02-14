@@ -8,8 +8,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ViewJson extends ControllerBase {
   public function json(NodeInterface $node) {
-    
-    $nodeFacade = FacadeFactory::createFromEntity($node);
+    $facadeFactory = FacadeFactory::getDefaultFactory();
+    $nodeFacade = $facadeFactory->createFromEntity($node);
 
     $response = new JsonResponse(
       $nodeFacade->getData()

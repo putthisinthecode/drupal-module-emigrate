@@ -2,67 +2,72 @@
 
 namespace Drupal\emigrate\Facade;
 
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\emigrate\Configuration;
 use Drupal\emigrate\Facade\BaseFieldDefinition\Comment;
+use Drupal\emigrate\Facade\BaseFieldDefinition\DefaultField;
+use Drupal\emigrate\Facade\BaseFieldDefinition\EntityReference;
 use Drupal\emigrate\Facade\BaseFieldDefinition\Image;
 use Drupal\emigrate\Facade\BaseFieldDefinition\Link;
 use Drupal\emigrate\Facade\BaseFieldDefinition\TextWithSummary;
-use Drupal\emigrate\Facade\Entity\Node;
-use \Drupal\emigrate\Facade\BaseFieldDefinition\DefaultField;
-use Drupal\emigrate\Facade\BaseFieldDefinition\EntityReference;
-use Drupal\emigrate\Facade\Entity\TaxonomyTerm;
 
-class FacadeFactory
-{
-  const TYPE_METHOD_MAPPING = [
-    'object' => 'getFacadeForObject'
-  ];
-
-  const OBJECT_CLASS_MAPPING = [
-    'Drupal\node\Entity\Node' => Node::class,
-    'Drupal\Core\Field\BaseFieldDefinition' => DefaultField::class,
-    'Drupal\taxonomy\Entity\Term' => TaxonomyTerm::class,
-    'Drupal\comment\Entity\Comment' => \Drupal\emigrate\Facade\Entity\Comment::class
-  ];
+class FacadeFactory {
 
   const FIELD_TYPE_CLASS_MAPPING = [
     'entity_reference' => EntityReference::class,
     'text_with_summary' => TextWithSummary::class,
     'comment' => Comment::class,
     'image' => Image::class,
-    'link' => Link::class
+    'link' => Link::class,
   ];
 
-  static function createFromEntity($element)
-  {
-    $facade = NULL;
-    $type = gettype($element);
-    $method = static::TYPE_METHOD_MAPPING[$type] ?? NULL;
+  private static $defaultFactory = NULL;
 
-    if (!empty($method)) {
-      $facade = call_user_func('static::' . $method, $element);
-    }
+  private $configuration;
 
-    return $facade;
+  public function __construct($configuration) {
+    $this->configuration = $configuration;
   }
 
-  static function createFromEntityFieldItem($entity, $key)
-  {
+  public static function init() {
+    if (empty(static::$defaultFactory)) {
+      $configuration = Configuration::getDefaultConfiguration();
+      static::$defaultFactory = new static($configuration);
+    }
+
+    return static::$defaultFactory;
+  }
+
+  public static function getDefaultFactory() {
+    return static::$defaultFactory;
+  }
+
+  static function createFromEntityFieldItem($entity, $key) {
     $field = $entity->$key;
     $type = $field->getFieldDefinition()->getType();
-    $className = static::FIELD_TYPE_CLASS_MAPPING[$type] ?? DefaultField::class;
-    $facade = new $className($field);
-
-    return $facade;
-  }
-
-  static protected function getFacadeForObject($object)
-  {
-    $className = static::OBJECT_CLASS_MAPPING[get_class($object)] ?? NULL;
-
-    if (!empty($className)) {
-      $facade = new $className($object);
+    if (!empty(static::FIELD_TYPE_CLASS_MAPPING[$type])) {
+      $className = static::FIELD_TYPE_CLASS_MAPPING[$type];
+    }
+    else {
+      $className = DefaultField::class;
     }
 
-    return $facade;
+    return new $className($field);
   }
+
+  function createFromEntity(EntityInterface $entity) {
+    $exporter = NULL;
+
+    $entityType = $entity->getEntityTypeId();
+
+    $exporterClassName = $this->configuration->getExporterClassNameForEntityType($entityType);
+
+    if (!empty($exporterClassName)) {
+      $exporter = new $exporterClassName($entity);
+    }
+
+    return $exporter;
+  }
+
+
 }

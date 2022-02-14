@@ -11,7 +11,7 @@ abstract class FacadeBase implements FacadeInterface
     $this->element = $element;
   }
 
-  public function getDebugData(): array
+  public function getDebugData()
   {
     return [];
   }
