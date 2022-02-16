@@ -19,7 +19,28 @@ class Emigrate {
     $this->directory = $directory;
     $this->loadConfiguration();
     FacadeFactory::init();
+  }
 
+  /**
+   * @return void
+   */
+  public function loadConfiguration() {
+    $configuration = Configuration::loadFromFile($this->getDirectory() . "/emigrate.toml");
+    $this->setConfiguration($configuration);
+  }
+
+  /**
+   * @return mixed
+   */
+  public function getDirectory() {
+    return $this->directory;
+  }
+
+  /**
+   * @param mixed $directory
+   */
+  public function setDirectory($directory) {
+    $this->directory = $directory;
   }
 
   /**
@@ -50,31 +71,10 @@ class Emigrate {
 
   }
 
-  /**
-   * @return void
-   */
-  public function loadConfiguration() {
-    $configuration = Configuration::loadFromFile($this->getDirectory() . "/emigrate.toml");
-    $this->setConfiguration($configuration);
-  }
-
-  /**
-   * @return mixed
-   */
-  public function getDirectory() {
-    return $this->directory;
-  }
-
-  /**
-   * @param mixed $directory
-   */
-  public function setDirectory($directory) {
-    $this->directory = $directory;
-  }
-
   public function exportEntity($entity) {
     $factory = FacadeFactory::getDefaultFactory();
     $exporter = $factory->createFromEntity($entity);
     return $exporter->getData();
   }
+
 }

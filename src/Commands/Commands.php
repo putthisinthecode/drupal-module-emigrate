@@ -2,6 +2,7 @@
 
 namespace Drupal\emigrate\Commands;
 
+use Consolidation\AnnotatedCommand\CommandData;
 use Drupal\emigrate\Emigrate;
 use Drush\Commands\DrushCommands;
 
@@ -14,20 +15,23 @@ use Drush\Commands\DrushCommands;
  */
 class Commands extends DrushCommands {
 
-  private $configuration;
+  /**
+   * @var Emigrate
+   */
+  private $emigrate;
 
   /**
-   * Export Drupal site.
+   * Initialize Emigrate objet before each command launch
    *
-   * @command emigrate:export
-   * @aliases em:ex
+   * @hook pre-command *
+   *
+   * @param CommandData $commandData
    */
-  public function export() {
-    $emigrate = new Emigrate($this->getCurrentDirectory());
+  public function preHook(CommandData $commandData) {
+    parent::preHook($commandData);
 
-    $emigrate->export();
+    $this->emigrate = new Emigrate($this->getCurrentDirectory());
   }
-
 
   /**
    * @return mixed
@@ -37,14 +41,48 @@ class Commands extends DrushCommands {
   }
 
   /**
+   * Export Drupal site.
+   *
+   * @command emigrate:export
+   * @aliases em:ex
+   */
+  public function export() {
+    $this->emigrate->export();
+  }
+
+  /**
    * Display migration status
    *
    * @command emigrate:status
    * $aliases em:st
    */
   public function status() {
-    $this->loadConfiguration();
-    print_r($this->configuration);
+    /**
+     * @var \Drush\Style\DrushStyle $io
+     */
+    $io = $this->io();
+    $io->title("Emigrate status");
+
+    $headers = ['Option', 'Value'];
+    $rows = [
+      [
+        'Emigrate directory',
+        $this->emigrate->getDirectory(),
+      ],
+    ];
+
+
+    $io->table($headers, $rows);
+  }
+
+  /**
+   * Display migration status
+   *
+   * @command emigrate:describe-entity-bundle
+   * $aliases em:deb
+   */
+  public function describeEntityBundle($entityTypeAndBundle) {
+
   }
 
 }

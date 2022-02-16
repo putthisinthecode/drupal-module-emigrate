@@ -12,10 +12,9 @@ class ViewJson extends ControllerBase {
     $emigrate = new Emigrate(DRUPAL_ROOT . '/..');
     $exported = $emigrate->exportEntity($node);
 
-    $response = new JsonResponse(
+    return new JsonResponse(
       $exported
     );
-    return $response;
   }
 
 }

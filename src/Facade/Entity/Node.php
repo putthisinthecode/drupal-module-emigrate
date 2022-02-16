@@ -3,18 +3,9 @@
 namespace Drupal\emigrate\Facade\Entity;
 
 use Drupal\emigrate\Configuration;
-use Drupal\emigrate\Facade\BaseFieldDefinition\DefaultField;
-use Drupal\emigrate\Facade\FacadeBase;
 use Drupal\emigrate\Facade\FacadeFactory;
 
 class Node extends DefaultEntity {
-
-  protected function fieldShouldBeExported($field) {
-    $configuration = Configuration::getDefaultConfiguration();
-    $bundleConfiguration = $configuration->getConfigurationForEntityBundle($this->element->getEntityTypeID(), $this->element->bundle());
-    $excludedField = $bundleConfiguration['exclude_fields'];
-    return !in_array($field, $excludedField);
-  }
 
   public function prepareDataAtIndex(int $index) {
     $fields = $this->getFieldsToExport();
@@ -69,6 +60,13 @@ class Node extends DefaultEntity {
       ->getAliasByPath('/node/' . $this->element->id());
 
     return $alias;
+  }
+
+  protected function fieldShouldBeExported($field) {
+    $configuration = Configuration::getDefaultConfiguration();
+    $bundleConfiguration = $configuration->getConfigurationForEntityBundle($this->element->getEntityTypeID(), $this->element->bundle());
+    $excludedField = $bundleConfiguration['exclude_fields'];
+    return !in_array($field, $excludedField);
   }
 
 }
