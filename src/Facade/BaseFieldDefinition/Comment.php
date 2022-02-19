@@ -2,31 +2,29 @@
 
 namespace Drupal\emigrate\Facade\BaseFieldDefinition;
 
-use Drupal\emigrate\Facade\FacadeBase;
 use Drupal\emigrate\Facade\FacadeFactory;
 
-class Comment extends DefaultField
-{
-  public function getId()
-  {
+class Comment extends DefaultField {
+
+  public function getId() {
     // TODO: Implement getId() method.
   }
 
-  public function prepareDataAtIndex(int $index)
-  {
-    $comments = 0;
-    $node = $this->element->getEntity();
+  public function processFieldItem($fieldItem) {
+    $comments = [];
+    $node = $fieldItem->getEntity();
     $entity_manager = \Drupal::entityTypeManager();
     try {
       /** @var \Drupal\comment\CommentStorageInterface $storage */
       $storage = $entity_manager->getStorage('comment');
       /** @var \Drupal\comment\CommentFieldItemList $commentField */
-      $commentField = $this->element;
-      $comments = $storage->loadThread($node, $commentField->getFieldDefinition()->getName(), \Drupal\comment\CommentManagerInterface::COMMENT_MODE_FLAT);
+      $commentField = $fieldItem;
+      $commentsTree = $storage->loadThread($node, $commentField->getFieldDefinition()
+        ->getName(), \Drupal\comment\CommentManagerInterface::COMMENT_MODE_FLAT);
 
       /** @var \Drupal\comment\Entity\Comment $comment */
-      foreach ($comments as $comment) {
-        $commentFacade = FacadeFactory::createFromEntity($comment);
+      foreach ($commentsTree as $comment) {
+        $commentFacade = $this->facadeFactory->createFromEntity($comment);
         $comments[] = $commentFacade->getData();
       }
 
@@ -35,11 +33,13 @@ class Comment extends DefaultField
     }
 
 
-    $type = $this->element->getFieldDefinition()->getItemDefinition()->getSettings()['comment_type'];
+    $type = $this->getFieldDefinition()
+      ->getItemDefinition()
+      ->getSettings()['comment_type'];
 
     return [
       'type' => $type,
-      'comments' => $comments
+      'comments' => $comments,
     ];
   }
 

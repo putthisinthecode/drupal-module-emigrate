@@ -2,31 +2,26 @@
 
 namespace Drupal\emigrate\Facade\BaseFieldDefinition;
 
-use Drupal\emigrate\Facade\FacadeBase;
-use Drupal\emigrate\Facade\FacadeFactory;
+class EntityReference extends DefaultField {
 
-class EntityReference extends DefaultField
-{
-  public function getId()
-  {
+  public function getId() {
     // TODO: Implement getId() method.
   }
 
-  public function prepareDataAtIndex(int $index)
-  {
-    $data = NULL;
-    $referencedEntities = $this->element->referencedEntities();
+
+  public function getData() {
+    $data = [];
+    $referencedEntities = $this->fieldItemList->referencedEntities();
     if (count($referencedEntities) > 0) {
-      $referencedEntity = $referencedEntities[$index];
-      $referencedEntityFacade = FacadeFactory::getDefaultFactory()->createFromEntity($referencedEntity);
-      $data = $referencedEntityFacade->getInlineData();
+      foreach ($referencedEntities as $referencedEntity) {
+        $referencedEntityFacade = $this->facadeFactory->createFromEntity($referencedEntity);
+        $data[] = $referencedEntityFacade->getInlineData();
+
+      }
+
     }
 
-    return $data;
+    return $this->enforceCardinality($data);
   }
 
-  public function getTargetType()
-  {
-    return $this->getSettings()['target_type'];
-  }
 }

@@ -3,13 +3,10 @@
 namespace Drupal\emigrate\Facade\Entity;
 
 use Drupal\emigrate\Configuration;
-use Drupal\emigrate\Facade\FacadeFactory;
 
 class Node extends DefaultEntity {
 
   public function prepareDataAtIndex(int $index) {
-    $fields = $this->getFieldsToExport();
-
     $data = [
       'id' => $this->getId(),
       'language' => $this->getLanguage(),
@@ -20,29 +17,14 @@ class Node extends DefaultEntity {
       'slug' => $this->getSlug(),
     ];
 
-    foreach ($fields as $fieldKey => $field) {
-      $fieldFacade = FacadeFactory::createFromEntityFieldItem($this->element, $fieldKey);
-      $fieldData = $fieldFacade->getData();
+    $fields = $this->getFieldsToExport();
 
-      $data[$fieldKey] = $fieldData;
+    foreach ($fields as $fieldName) {
+      $exporter = $this->facadeFactory->createFromField($this->element, $fieldName);
+      $data = $exporter->enrichData($data);
     }
 
     return $data;
-  }
-
-  /**
-   * @param $fields
-   *
-   * @return array
-   */
-  public function getFieldsToExport() {
-    $entityFieldManager = \Drupal::service('entity_field.manager');
-    $fields = $entityFieldManager->getFieldDefinitions('node', $this->element->bundle());
-
-    return array_filter($fields, [
-      $this,
-      'fieldShouldBeExported',
-    ], ARRAY_FILTER_USE_KEY);
   }
 
   public function getId() {
@@ -56,10 +38,45 @@ class Node extends DefaultEntity {
   }
 
   public function getSlug() {
-    $alias = \Drupal::service('path_alias.manager')
+    return \Drupal::service('path_alias.manager')
       ->getAliasByPath('/node/' . $this->element->id());
+  }
 
-    return $alias;
+  /**
+   * @param $fields
+   *
+   * @return array
+   */
+  public function getFieldsToExport() {
+    $entityFieldManager = \Drupal::service('entity_field.manager');
+    $fields = $entityFieldManager->getFieldDefinitions('node', $this->element->bundle());
+
+    return array_keys(array_filter($fields, [
+      $this,
+      'fieldShouldBeExported',
+    ], ARRAY_FILTER_USE_KEY));
+  }
+
+  protected function getDataFromFieldItemList($field) {
+    $data = [];
+    $exporter = $this->facadeFactory->createFromField($field);
+    $fieldItemList = $this->element->get($field->getName());
+    $exporter = $this->facadeFactory->createFromField($fieldItemList);
+
+    foreach ($fieldItemList as $index => $fieldItem) {
+
+      /**
+       * @var \Drupal\emigrate\Facade\BaseFieldDefinition\DefaultField
+       */
+      $exporter = $this->facadeFactory->createFromFieldName($this->element, );
+      $data[$index] = $exporter->getData();
+    }
+
+    if ($field->getCardinality() == 1) {
+      $data = current($data);
+    }
+
+    return $data;
   }
 
   protected function fieldShouldBeExported($field) {

@@ -10,17 +10,16 @@ class Link extends DefaultField
     // TODO: Implement getId() method.
   }
 
-  public function prepareDataAtIndex(int $index)
+  public function processFieldItem($fieldItem)
   {
     $data = NULL;
 
     if (!$this->isEmpty()) {
-      $link = $this->element->get(0);
-      if ($link->isExternal()) {
-        $uri = $link->getUrl();
+      if ($fieldItem->isExternal()) {
+        $uri = $fieldItem->getUrl();
         $data = [
           'uri' => $uri->getUri(),
-          'title' => $link->title,
+          'title' => $fieldItem->title,
         ];
       }
     }

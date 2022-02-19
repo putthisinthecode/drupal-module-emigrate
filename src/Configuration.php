@@ -6,7 +6,7 @@ use Yosymfony\Toml\Toml;
 
 class Configuration {
 
-  private static $defaultConfiguration = NULL;
+  private static $defaultConfiguration;
 
   private $configurationArray;
 
@@ -23,6 +23,10 @@ class Configuration {
     return static::$defaultConfiguration;
   }
 
+  public static function getDefaultConfiguration() {
+    return static::$defaultConfiguration;
+  }
+
   public function getExporterForClass($className) {
     return $this->configurationArray[$className];
   }
@@ -36,10 +40,6 @@ class Configuration {
     return $exporterClassName;
   }
 
-  public static function getDefaultConfiguration() {
-    return static::$defaultConfiguration;
-  }
-
   public function getConfigurationForEntityBundle($entityType, $bundle) {
     $bundleConfiguration = [];
 
@@ -50,6 +50,16 @@ class Configuration {
     $entityConfiguration = $this->configurationArray['entity'][$entityType];
 
     return array_merge_recursive($entityConfiguration, $bundleConfiguration);
+  }
+
+  public function getExporterForFieldItem($type) {
+    $exporter = NULL;
+
+    if (!empty($this->configurationArray['entity']['field_config'][$type])) {
+      $exporter = $this->configurationArray['entity']['field_config'][$type];
+    }
+
+    return $exporter;
   }
 
 }

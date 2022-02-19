@@ -4,25 +4,27 @@ namespace Drupal\emigrate\Facade\BaseFieldDefinition;
 
 class Image extends DefaultField
 {
-  public function prepareDataAtIndex(int $index)
+  public function getData()
   {
     /**
      * @TODO : Should return NULL when empty and cardinality is 1
      */
     $data = [];
 
-    $referencedEntities = $this->element->referencedEntities();
+    $files = $this->fieldItemList->referencedEntities();
 
-    if (count($referencedEntities) > 0) {
+    if (count($files) > 0) {
+      foreach($files as $file) {
+        $data[] = [
+          'id' => $file->id(),
+          'uri' => $this->removeFilePathPrefix($file->getFileUri()),
+          'name' => $file->getFilename(),
+        ];
 
-      $file = $referencedEntities[$index];
-
-      $data = [
-        'id' => $file->id(),
-        'uri' => $this->removeFilePathPrefix($file->getFileUri()),
-        'name' => $file->getFilename(),
-      ];
+      }
     }
+
+    $data = $this->enforceCardinality($data);
 
     return $data;
   }

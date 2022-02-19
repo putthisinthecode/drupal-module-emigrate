@@ -48,17 +48,19 @@ class FacadeFactory {
     return static::$defaultFactory;
   }
 
-  static function createFromEntityFieldItem($entity, $key) {
-    $field = $entity->$key;
-    $type = $field->getFieldDefinition()->getType();
-    if (!empty(static::FIELD_TYPE_CLASS_MAPPING[$type])) {
-      $className = static::FIELD_TYPE_CLASS_MAPPING[$type];
+  public function createFromField($entity, $fieldName) {
+    $fieldDefinition = $entity->getFieldDefinition($fieldName);
+    $field = $entity->get($fieldName);
+    if (!empty($this->configuration->getExporterForFieldItem($fieldDefinition
+      ->getType()))) {
+      $className = $this->configuration->getExporterForFieldItem($fieldDefinition
+        ->getType())['exporter'];
     }
     else {
       $className = DefaultField::class;
     }
 
-    return new $className($field);
+    return new $className($entity, $fieldName);
   }
 
   function createFromEntity(EntityInterface $entity) {
@@ -74,5 +76,6 @@ class FacadeFactory {
 
     return $exporter;
   }
+
 
 }
