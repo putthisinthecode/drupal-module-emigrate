@@ -10,7 +10,7 @@ class TaxonomyTerm extends DefaultEntity
     // TODO: Implement getId() method.
   }
 
-  public function prepareDataAtIndex(int $index)
+  public function getData()
   {
     // TODO: Implement getData() method.
   }

@@ -4,7 +4,7 @@ namespace Drupal\emigrate\Facade\Entity;
 
 class Comment extends DefaultEntity
 {
-  public function prepareDataAtIndex(int $index): array
+  public function getData()
   {
     $comment = $this->element;
 

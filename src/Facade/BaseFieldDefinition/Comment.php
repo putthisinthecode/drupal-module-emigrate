@@ -2,8 +2,6 @@
 
 namespace Drupal\emigrate\Facade\BaseFieldDefinition;
 
-use Drupal\emigrate\Facade\FacadeFactory;
-
 class Comment extends DefaultField {
 
   public function getId() {
@@ -25,7 +23,9 @@ class Comment extends DefaultField {
       /** @var \Drupal\comment\Entity\Comment $comment */
       foreach ($commentsTree as $comment) {
         $commentFacade = $this->facadeFactory->createFromEntity($comment);
-        $comments[] = $commentFacade->getData();
+        $data = $commentFacade->getData();
+        $data['id'] = $comment->id();
+        $comments[] = $data;
       }
 
     } catch (\Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException $e) {
