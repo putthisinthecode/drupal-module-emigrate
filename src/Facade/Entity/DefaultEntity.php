@@ -13,7 +13,7 @@ class DefaultEntity extends FacadeBase {
   }
 
   public function getId() {
-    // TODO: Implement getId() method.
+    return $this->element->id();
   }
 
   public function getInlineData() {
@@ -22,7 +22,7 @@ class DefaultEntity extends FacadeBase {
     ];
   }
 
-  public function getType() {
+  public function getBundle() {
     return $this->element->bundle();
   }
 
@@ -54,6 +54,10 @@ class DefaultEntity extends FacadeBase {
       $this,
       'fieldShouldBeExported',
     ]));
+  }
+
+  public function mustExportEntity() {
+    return TRUE;
   }
 
   protected function getDataFromFieldItemList($field) {
@@ -88,4 +92,7 @@ class DefaultEntity extends FacadeBase {
     return !in_array($field->getName(), $excludedField) && $field instanceof FieldConfig;
   }
 
+  public function getEntityTypeId() {
+    return $this->element->getEntityTypeId();
+  }
 }

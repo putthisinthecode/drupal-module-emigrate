@@ -62,4 +62,13 @@ class Configuration {
     return $exporter;
   }
 
+  public function getRootEntities() {
+    if (!empty($this->configurationArray['global']['root_entities']) && is_array($this->configurationArray['global']['root_entities'])) {
+      return $this->configurationArray['global']['root_entities'];
+    }
+    else {
+      return [];
+    }
+  }
+
 }

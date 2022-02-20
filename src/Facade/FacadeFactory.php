@@ -50,7 +50,6 @@ class FacadeFactory {
 
   public function createFromField($entity, $fieldName) {
     $fieldDefinition = $entity->getFieldDefinition($fieldName);
-    $field = $entity->get($fieldName);
     if (!empty($this->configuration->getExporterForFieldItem($fieldDefinition
       ->getType()))) {
       $className = $this->configuration->getExporterForFieldItem($fieldDefinition

@@ -10,6 +10,5 @@ interface FacadeInterface {
 
   public function getDebugData();
 
-  public function getType();
 
 }
