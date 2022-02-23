@@ -14,8 +14,15 @@ class Emigrate {
    */
   private $configuration;
 
-  public function __construct($directory) {
+  private $ui;
+
+  /**
+   * @param string $directory
+   * @param \Drupal\emigrate\Ui\UiInterface $ui
+   */
+  public function __construct($directory, $ui) {
     $this->directory = $directory;
+    $this->ui = $ui;
     $this->loadConfiguration();
     FacadeFactory::init();
   }
@@ -24,8 +31,11 @@ class Emigrate {
    * @return void
    */
   public function loadConfiguration() {
-    $configuration = Configuration::loadFromFile($this->getDirectory() . "/emigrate.toml");
-    $this->setConfiguration($configuration);
+    $configurationPath = $this->getDirectory() . "/emigrate/emigrate.toml";
+    if (file_exists($configurationPath)) {
+      $configuration = Configuration::loadFromFile($configurationPath);
+      $this->setConfiguration($configuration);
+    }
   }
 
   /**
@@ -76,7 +86,6 @@ class Emigrate {
       }
     }
 
-
     $writer->write();
   }
 
@@ -86,4 +95,7 @@ class Emigrate {
     return $exporter->getData();
   }
 
+  public function isConfigured() {
+    return !empty($this->configuration);
+  }
 }

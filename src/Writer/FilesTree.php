@@ -2,7 +2,11 @@
 
 namespace Drupal\emigrate\Writer;
 
+use Drupal\emigrate\Utils\FileManagement;
+
 class FilesTree {
+
+  use FileManagement;
 
   private $facades = [];
 
@@ -22,65 +26,38 @@ class FilesTree {
   }
 
   public function write() {
-    $rootPath = $this->constructPath([
+    $rootPath = self::constructpath([
       $this->options['destination'],
       'emigrate',
     ]);
     $entitiesDirectorySubPath = 'entities';
-    $this->ensureDirectory($this->constructPath([
+    static::ensureDirectory(self::constructpath([
       $rootPath,
       $entitiesDirectorySubPath,
     ]));
 
     foreach ($this->facades as $facade) {
-      $typeDirectorySubPath = $this->constructPath([
+      $typeDirectorySubPath = self::constructpath([
         $entitiesDirectorySubPath,
         $facade->getEntityTypeId(),
         $facade->getBundle(),
       ]);
-      $this->ensureDirectory($this->constructPath([
+      static::ensureDirectory(self::constructpath([
         $rootPath,
         $typeDirectorySubPath,
       ]));
       $filename = $facade->getId() . '.json';
-      $fileSubPath = $this->constructPath($typeDirectorySubPath, $filename);
-      file_put_contents($this->constructPath([
+      $fileSubPath = self::constructpath($typeDirectorySubPath, $filename);
+      file_put_contents(self::constructpath([
         $rootPath,
         $fileSubPath,
       ]), json_encode($facade->getData()));
       $this->addToIndex($fileSubPath);
     }
-    file_put_contents($this->constructPath([
+    file_put_contents(self::constructpath([
       $rootPath,
       'index.js',
     ]), json_encode($this->index));
-  }
-
-  /**
-   * @param array $pathArray
-   *
-   * @return string
-   */
-  public function constructPath($pathArray, $subPath = NULL): string {
-    if (!is_array($pathArray)) {
-      $pathArray = [$pathArray];
-    }
-
-    if (!empty($subPath)) {
-      $pathArray[] = $subPath;
-    }
-    return join(DIRECTORY_SEPARATOR, $pathArray);
-  }
-
-  /**
-   * @param string $destination
-   *
-   * @return void
-   */
-  public function ensureDirectory(string $destination, $subPath = NULL) {
-    if (!is_dir($destination)) {
-      mkdir($destination, 0777, TRUE);
-    }
   }
 
   public function addToIndex($path) {

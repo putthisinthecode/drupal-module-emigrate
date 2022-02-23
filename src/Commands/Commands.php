@@ -3,7 +3,9 @@
 namespace Drupal\emigrate\Commands;
 
 use Consolidation\AnnotatedCommand\CommandData;
+use Drupal\emigrate\Configuration;
 use Drupal\emigrate\Emigrate;
+use Drupal\emigrate\Ui\Drush;
 use Drush\Commands\DrushCommands;
 
 /**
@@ -23,14 +25,12 @@ class Commands extends DrushCommands {
   /**
    * Initialize Emigrate objet before each command launch
    *
-   * @hook pre-command *
+   * @hook validate *
    *
    * @param CommandData $commandData
    */
-  public function preHook(CommandData $commandData) {
-    parent::preHook($commandData);
-
-    $this->emigrate = new Emigrate($this->getCurrentDirectory());
+  public function validate(CommandData $commandData) {
+    $this->emigrate = new Emigrate($this->getCurrentDirectory(), new Drush($this->io()));
   }
 
   /**
@@ -47,7 +47,18 @@ class Commands extends DrushCommands {
    * @aliases em:ex
    */
   public function export() {
+    $this->checkConfiguration();
     $this->emigrate->export();
+  }
+
+  /**
+   * @return void
+   * @throws \Exception
+   */
+  public function checkConfiguration() {
+    if (!$this->emigrate->isConfigured()) {
+      throw(new \Exception('You must provide a configuration file. Simple way to do this is running drush emigrate:init'));
+    }
   }
 
   /**
@@ -60,14 +71,16 @@ class Commands extends DrushCommands {
     /**
      * @var \Drush\Style\DrushStyle $io
      */
+    $this->checkConfiguration();
+
     $io = $this->io();
     $io->title("Emigrate status");
-
+    $configuration = $this->emigrate->getConfiguration();
     $headers = ['Option', 'Value'];
     $rows = [
       [
-        'Emigrate directory',
-        $this->emigrate->getDirectory(),
+        'Configuration file',
+        $configuration->getConfigurationFilePath(),
       ],
     ];
 
@@ -83,6 +96,16 @@ class Commands extends DrushCommands {
    */
   public function describeEntityBundle($entityTypeAndBundle) {
 
+  }
+
+  /**
+   * Display migration status
+   *
+   * @command emigrate:init
+   * $aliases em:init
+   */
+  public function init() {
+    Configuration::create($this->getCurrentDirectory());
   }
 
 }
