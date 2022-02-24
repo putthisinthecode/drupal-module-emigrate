@@ -21,4 +21,4 @@ It will create a emigrate directory with a TOML configuration file inside it. Yo
 drush emigrate:export
 ```
 
-All nodes, users and taxonomy terms will be exported as individual json files.
+All nodes, users and taxonomy terms will be exported as individual json files in the emigrate directory.
