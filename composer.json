@@ -2,7 +2,6 @@
     "name": "putthisinthecode/emigrate",
     "type": "drupal-module",
     "description": "A module to export Drupal site content",
-    "version": "1.0.0-dev",
     "require": {
         "php": ">=7.0",
         "yosymfony/toml": "^1.0"
