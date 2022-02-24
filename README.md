@@ -15,7 +15,7 @@ At the root of your drupal installation, type
 drush emigrate:init
 ```
 
-It will create a emigrate directory with a TOML configuration file inside it. You can then type
+It will create an "emigrate" directory with a TOML configuration file inside it. You can then type
 
 ```shell
 drush emigrate:export
