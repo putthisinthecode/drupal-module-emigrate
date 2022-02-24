@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d366902af6bf266821673a3c1eaa0465",
+    "content-hash": "e6d24c1d8335f755a354ea352a8ae9b7",
     "packages": [
         {
             "name": "yosymfony/parser-utils",
