@@ -1,5 +1,5 @@
 {
-    "name": "putthisinthecode/emigrate",
+    "name": "putthisinthecode/drupal-module-emigrate",
     "description": "A module to export Drupal site content",
     "require": {
         "yosymfony/toml": "^1.0"
