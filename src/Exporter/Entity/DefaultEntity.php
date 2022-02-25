@@ -1,12 +1,12 @@
 <?php
 
-namespace Drupal\emigrate\Facade\Entity;
+namespace Drupal\emigrate\Exporter\Entity;
 
 use Drupal\emigrate\Configuration;
-use Drupal\emigrate\Facade\FacadeBase;
+use Drupal\emigrate\Exporter\ExporterBase;
 use Drupal\field\Entity\FieldConfig;
 
-class DefaultEntity extends FacadeBase {
+class DefaultEntity extends ExporterBase {
 
   public function getData() {
     return $this->getData();
@@ -35,7 +35,7 @@ class DefaultEntity extends FacadeBase {
     $fields = $this->getFieldsToExport();
 
     foreach ($fields as $fieldName) {
-      $exporter = $this->facadeFactory->createFromField($this->element, $fieldName);
+      $exporter = $this->exporterFactory->createFromField($this->element, $fieldName);
       $data = $exporter->enrichData($data);
     }
     return $data;
@@ -67,9 +67,9 @@ class DefaultEntity extends FacadeBase {
     foreach ($fieldItemList as $index => $fieldItem) {
 
       /**
-       * @var \Drupal\emigrate\Facade\BaseFieldDefinition\DefaultField
+       * @var \Drupal\emigrate\Exporter\BaseFieldDefinition\DefaultField
        */
-      $exporter = $this->facadeFactory->createFromFieldName($this->element, );
+      $exporter = $this->exporterFactory->createFromFieldName($this->element, );
       $data[$index] = $exporter->getData();
     }
 

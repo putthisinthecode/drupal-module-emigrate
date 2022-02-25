@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\emigrate\Facade\BaseFieldDefinition;
+namespace Drupal\emigrate\Exporter\BaseFieldDefinition;
 
 class EntityReferenceRevisions extends EntityReference {
 

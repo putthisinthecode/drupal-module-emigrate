@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\emigrate\Facade\BaseFieldDefinition;
+namespace Drupal\emigrate\Exporter\BaseFieldDefinition;
 
-use Drupal\emigrate\Facade\FacadeFactory;
+use Drupal\emigrate\Exporter\ExporterFactory;
 
 class DefaultField {
 
@@ -12,9 +12,9 @@ class DefaultField {
   protected $fieldItemList;
 
   /**
-   * @var \Drupal\emigrate\Facade\FacadeFactory
+   * @var \Drupal\emigrate\Exporter\ExporterFactory
    */
-  protected $facadeFactory;
+  protected $exporterFactory;
 
   /**
    * @var \Drupal\Core\Entity\FieldableEntityInterface
@@ -52,7 +52,7 @@ class DefaultField {
     $this->fieldConfig = $this->fieldDefinition->getConfig($fieldName);
     $this->fieldStorage = $this->fieldConfig->getFieldStorageDefinition();
     $this->fieldItemList = $entity->get($fieldName);
-    $this->facadeFactory = FacadeFactory::getDefaultFactory();
+    $this->exporterFactory = ExporterFactory::getDefaultFactory();
   }
 
   public function getId() {

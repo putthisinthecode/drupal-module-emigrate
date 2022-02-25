@@ -2,7 +2,7 @@
 
 namespace Drupal\emigrate;
 
-use Drupal\emigrate\Facade\FacadeFactory;
+use Drupal\emigrate\Exporter\ExporterFactory;
 use Drupal\emigrate\Writer\FilesTree;
 
 class Emigrate {
@@ -24,7 +24,7 @@ class Emigrate {
     $this->directory = $directory;
     $this->ui = $ui;
     $this->loadConfiguration();
-    FacadeFactory::init();
+    ExporterFactory::init();
   }
 
   /**
@@ -68,7 +68,7 @@ class Emigrate {
 
   public function export() {
     $this->configuration->getRootEntities();
-    $facadeFactory = FacadeFactory::getDefaultFactory();
+    $exporterFactory = ExporterFactory::getDefaultFactory();
     $rootEntities = $this->configuration->getRootEntities();
     $entityTypeManager = \Drupal::entityTypeManager();
     $writer = new FilesTree([
@@ -79,7 +79,7 @@ class Emigrate {
       $storage = $entityTypeManager->getStorage($entityType);
       $ids = \Drupal::entityQuery($entityType)->execute();
       foreach ($storage->loadMultiple($ids) as $node) {
-        $exporter = $facadeFactory->createFromEntity($node);
+        $exporter = $exporterFactory->createFromEntity($node);
         if ($exporter->mustExportEntity()) {
           $writer->add($exporter);
         }
@@ -90,7 +90,7 @@ class Emigrate {
   }
 
   public function exportEntity($entity) {
-    $factory = FacadeFactory::getDefaultFactory();
+    $factory = ExporterFactory::getDefaultFactory();
     $exporter = $factory->createFromEntity($entity);
     return $exporter->getData();
   }

@@ -1,6 +1,6 @@
 # Map entity types to exporters
 # Example : Drupal nodes will be processed
-# by exporter \Drupal\emigrate\Facade\Entity\Node
+# by exporter \Drupal\emigrate\Exporter\Entity\Node
 # Backslashes in namespace must be escaped with a second backslash
 
 [global]
@@ -13,43 +13,43 @@ root_entities = ['node', 'taxonomy_term', 'user']
 # Entity types
 # Map entity types to exporter classes
 [entity.node]
-exporter = "\\Drupal\\emigrate\\Facade\\Entity\\Node"
+exporter = "\\Drupal\\emigrate\\Exporter\\Entity\\Node"
 
 [entity.taxonomy_term]
-exporter = "\\Drupal\\emigrate\\Facade\\Entity\\TaxonomyTerm"
+exporter = "\\Drupal\\emigrate\\Exporter\\Entity\\TaxonomyTerm"
 
 [entity.user]
-exporter = "\\Drupal\\emigrate\\Facade\\Entity\\User"
+exporter = "\\Drupal\\emigrate\\Exporter\\Entity\\User"
 
 
 [entity.comment]
-exporter = "\\Drupal\\emigrate\\Facade\\Entity\\Comment"
+exporter = "\\Drupal\\emigrate\\Exporter\\Entity\\Comment"
 
 [entity.paragraph]
-exporter = "\\Drupal\\emigrate\\Facade\\Entity\\Paragraph"
+exporter = "\\Drupal\\emigrate\\Exporter\\Entity\\Paragraph"
 
 # Fields
 # Map fields types to exporter classes
 [entity.base_field]
-exporter = "\\Drupal\\emigrate\\Facade\\BaseFieldDefinition\\DefaultField"
+exporter = "\\Drupal\\emigrate\\Exporter\\BaseFieldDefinition\\DefaultField"
 
 [entity.field_config.entity_reference]
-exporter = "\\Drupal\\emigrate\\Facade\\BaseFieldDefinition\\EntityReference"
+exporter = "\\Drupal\\emigrate\\Exporter\\BaseFieldDefinition\\EntityReference"
 
 [entity.field_config.text_with_summary]
-exporter = "\\Drupal\\emigrate\\Facade\\BaseFieldDefinition\\TextWithSummary"
+exporter = "\\Drupal\\emigrate\\Exporter\\BaseFieldDefinition\\TextWithSummary"
 
 [entity.field_config.comment]
-exporter = "\\Drupal\\emigrate\\Facade\\BaseFieldDefinition\\Comment"
+exporter = "\\Drupal\\emigrate\\Exporter\\BaseFieldDefinition\\Comment"
 
 [entity.field_config.image]
-exporter = "\\Drupal\\emigrate\\Facade\\BaseFieldDefinition\\Image"
+exporter = "\\Drupal\\emigrate\\Exporter\\BaseFieldDefinition\\Image"
 
 [entity.field_config.link]
-exporter = "\\Drupal\\emigrate\\Facade\\BaseFieldDefinition\\Link"
+exporter = "\\Drupal\\emigrate\\Exporter\\BaseFieldDefinition\\Link"
 
 [entity.field_config.entity_reference_revisions]
-exporter = "\\Drupal\\emigrate\\Facade\\BaseFieldDefinition\\EntityReferenceRevisions"
+exporter = "\\Drupal\\emigrate\\Exporter\\BaseFieldDefinition\\EntityReferenceRevisions"
 
 [entity]
 # Map a bundle to a specific exporter
@@ -57,4 +57,4 @@ exporter = "\\Drupal\\emigrate\\Facade\\BaseFieldDefinition\\EntityReferenceRevi
 
 # Example
 # [entity.node.bundle.article]
-# exporter ="\\Drupal\\emigrate\\Facade\\Entity\\MyExporter"
+# exporter ="\\Drupal\\emigrate\\Exporter\\Entity\\MyExporter"

@@ -1,17 +1,17 @@
 <?php
 
-namespace Drupal\emigrate\Facade;
+namespace Drupal\emigrate\Exporter;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\emigrate\Configuration;
-use Drupal\emigrate\Facade\BaseFieldDefinition\Comment;
-use Drupal\emigrate\Facade\BaseFieldDefinition\DefaultField;
-use Drupal\emigrate\Facade\BaseFieldDefinition\EntityReference;
-use Drupal\emigrate\Facade\BaseFieldDefinition\Image;
-use Drupal\emigrate\Facade\BaseFieldDefinition\Link;
-use Drupal\emigrate\Facade\BaseFieldDefinition\TextWithSummary;
+use Drupal\emigrate\Exporter\BaseFieldDefinition\Comment;
+use Drupal\emigrate\Exporter\BaseFieldDefinition\DefaultField;
+use Drupal\emigrate\Exporter\BaseFieldDefinition\EntityReference;
+use Drupal\emigrate\Exporter\BaseFieldDefinition\Image;
+use Drupal\emigrate\Exporter\BaseFieldDefinition\Link;
+use Drupal\emigrate\Exporter\BaseFieldDefinition\TextWithSummary;
 
-class FacadeFactory {
+class ExporterFactory {
 
   const FIELD_TYPE_CLASS_MAPPING = [
     'entity_reference' => EntityReference::class,
@@ -42,7 +42,7 @@ class FacadeFactory {
   }
 
   /**
-   * @return FacadeFactory
+   * @return ExporterFactory
    */
   public static function getDefaultFactory() {
     return static::$defaultFactory;

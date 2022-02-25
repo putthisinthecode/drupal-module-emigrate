@@ -8,7 +8,7 @@ class FilesTree {
 
   use FileManagement;
 
-  private $facades = [];
+  private $exporters = [];
 
   /**
    * @var array
@@ -21,8 +21,8 @@ class FilesTree {
     $this->options = $options;
   }
 
-  public function add($facade) {
-    $this->facades[] = $facade;
+  public function add($exporter) {
+    $this->exporters[] = $exporter;
   }
 
   public function write() {
@@ -36,22 +36,22 @@ class FilesTree {
       $entitiesDirectorySubPath,
     ]));
 
-    foreach ($this->facades as $facade) {
+    foreach ($this->exporters as $exporter) {
       $typeDirectorySubPath = self::constructpath([
         $entitiesDirectorySubPath,
-        $facade->getEntityTypeId(),
-        $facade->getBundle(),
+        $exporter->getEntityTypeId(),
+        $exporter->getBundle(),
       ]);
       static::ensureDirectory(self::constructpath([
         $rootPath,
         $typeDirectorySubPath,
       ]));
-      $filename = $facade->getId() . '.json';
+      $filename = $exporter->getId() . '.json';
       $fileSubPath = self::constructpath($typeDirectorySubPath, $filename);
       file_put_contents(self::constructpath([
         $rootPath,
         $fileSubPath,
-      ]), json_encode($facade->getData()));
+      ]), json_encode($exporter->getData()));
       $this->addToIndex($fileSubPath);
     }
     file_put_contents(self::constructpath([

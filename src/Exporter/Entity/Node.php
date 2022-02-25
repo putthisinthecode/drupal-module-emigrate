@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\emigrate\Facade\Entity;
+namespace Drupal\emigrate\Exporter\Entity;
 
 use Drupal\emigrate\Configuration;
 

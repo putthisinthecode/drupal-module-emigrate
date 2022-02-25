@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\emigrate\Facade;
+namespace Drupal\emigrate\Exporter;
 
-interface FacadeInterface {
+interface ExporterInterface {
 
   public function getId();
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\emigrate\Facade\BaseFieldDefinition;
+namespace Drupal\emigrate\Exporter\BaseFieldDefinition;
 
 class EntityReference extends DefaultField {
 
@@ -14,8 +14,8 @@ class EntityReference extends DefaultField {
     $referencedEntities = $this->fieldItemList->referencedEntities();
     if (count($referencedEntities) > 0) {
       foreach ($referencedEntities as $referencedEntity) {
-        $referencedEntityFacade = $this->facadeFactory->createFromEntity($referencedEntity);
-        $data[] = $referencedEntityFacade->getInlineData();
+        $referencedEntityExporter = $this->exporterFactory->createFromEntity($referencedEntity);
+        $data[] = $referencedEntityExporter->getInlineData();
 
       }
 

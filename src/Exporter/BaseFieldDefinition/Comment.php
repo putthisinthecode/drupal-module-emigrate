@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\emigrate\Facade\BaseFieldDefinition;
+namespace Drupal\emigrate\Exporter\BaseFieldDefinition;
 
 class Comment extends DefaultField {
 
@@ -22,8 +22,8 @@ class Comment extends DefaultField {
 
       /** @var \Drupal\comment\Entity\Comment $comment */
       foreach ($commentsTree as $comment) {
-        $commentFacade = $this->facadeFactory->createFromEntity($comment);
-        $data = $commentFacade->getData();
+        $commentExporter = $this->exporterFactory->createFromEntity($comment);
+        $data = $commentExporter->getData();
         $data['id'] = $comment->id();
         $comments[] = $data;
       }
