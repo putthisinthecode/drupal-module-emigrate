@@ -1,60 +1,47 @@
-# Map entity types to exporters
-# Example : Drupal nodes will be processed
-# by exporter \Drupal\emigrate\Exporter\Entity\Node
-# Backslashes in namespace must be escaped with a second backslash
-
+# Global configuration
 [global]
 # The root entities you want to export.
-# Root entities have their own entry in the index
-# You don't need to export entities which exists only
+# Root entities have their own entries in the index
+# You don't need to export entities which exist only
 # in the context of another entity (example : paragraph)
 root_entities = ['node', 'taxonomy_term', 'user']
 
 # Entity types
 # Map entity types to exporter classes
-[entity.node]
-exporter = "\\Drupal\\emigrate\\Exporter\\Entity\\Node"
+[entities.node]
+exporter = 'Drupal\emigrate\Exporter\Entity\Node'
 
-[entity.taxonomy_term]
-exporter = "\\Drupal\\emigrate\\Exporter\\Entity\\TaxonomyTerm"
+[entities.taxonomy_term]
+exporter = 'Drupal\emigrate\Exporter\Entity\TaxonomyTerm'
 
-[entity.user]
-exporter = "\\Drupal\\emigrate\\Exporter\\Entity\\User"
+[entities.user]
+exporter = 'Drupal\emigrate\Exporter\Entity\User'
 
+[entities.comment]
+exporter = 'Drupal\emigrate\Exporter\Entity\Comment'
 
-[entity.comment]
-exporter = "\\Drupal\\emigrate\\Exporter\\Entity\\Comment"
-
-[entity.paragraph]
-exporter = "\\Drupal\\emigrate\\Exporter\\Entity\\Paragraph"
+[entities.paragraph]
+exporter = 'Drupal\emigrate\Exporter\Entity\Paragraph'
 
 # Fields
 # Map fields types to exporter classes
-[entity.base_field]
-exporter = "\\Drupal\\emigrate\\Exporter\\BaseFieldDefinition\\DefaultField"
+[fields._default]
+exporter = 'Drupal\emigrate\Exporter\BaseFieldDefinition\DefaultField'
 
-[entity.field_config.entity_reference]
-exporter = "\\Drupal\\emigrate\\Exporter\\BaseFieldDefinition\\EntityReference"
+[fields.entity_reference]
+exporter = 'Drupal\emigrate\Exporter\BaseFieldDefinition\EntityReference'
 
-[entity.field_config.text_with_summary]
-exporter = "\\Drupal\\emigrate\\Exporter\\BaseFieldDefinition\\TextWithSummary"
+[fields.text_with_summary]
+exporter = 'Drupal\emigrate\Exporter\BaseFieldDefinition\TextWithSummary'
 
-[entity.field_config.comment]
-exporter = "\\Drupal\\emigrate\\Exporter\\BaseFieldDefinition\\Comment"
+[fields.comment]
+exporter = 'Drupal\emigrate\Exporter\BaseFieldDefinition\Comment'
 
-[entity.field_config.image]
-exporter = "\\Drupal\\emigrate\\Exporter\\BaseFieldDefinition\\Image"
+[fields.image]
+exporter = 'Drupal\emigrate\Exporter\BaseFieldDefinition\Image'
 
-[entity.field_config.link]
-exporter = "\\Drupal\\emigrate\\Exporter\\BaseFieldDefinition\\Link"
+[fields.link]
+exporter = 'Drupal\emigrate\Exporter\BaseFieldDefinition\Link'
 
-[entity.field_config.entity_reference_revisions]
-exporter = "\\Drupal\\emigrate\\Exporter\\BaseFieldDefinition\\EntityReferenceRevisions"
-
-[entity]
-# Map a bundle to a specific exporter
-# This exporter will override the entity one listed above
-
-# Example
-# [entity.node.bundle.article]
-# exporter ="\\Drupal\\emigrate\\Exporter\\Entity\\MyExporter"
+[fields.entity_reference_revisions]
+exporter = 'Drupal\emigrate\Exporter\BaseFieldDefinition\EntityReferenceRevisions'

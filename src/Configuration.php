@@ -37,7 +37,7 @@ class Configuration {
     return static::$defaultConfiguration;
   }
 
-  public static function createDefaultConfiguration($directory) {
+  public static function createDefaultConfiguration() {
     self::ensureConfigurationFile();
   }
 
@@ -54,9 +54,9 @@ class Configuration {
         static::EMIGRATE_DIRECTORY,
       ]);
 
-      $configurationfilePath = static::constructPath($directoryPath, static::TOML_FILE_NAME);
+      $configurationFilePath = static::constructPath($directoryPath, static::TOML_FILE_NAME);
 
-      copy($filePath, $configurationfilePath);
+      copy($filePath, $configurationFilePath);
 
       $drupalConfig = \Drupal::service('config.factory')
         ->getEditable('emigrate.configuration');
@@ -81,8 +81,8 @@ class Configuration {
 
   public function getExporterClassNameForEntityType($entityType) {
     $exporterClassName = NULL;
-    if (!empty($this->configurationArray['entity'][$entityType]['exporter'])) {
-      $exporterClassName = $this->configurationArray['entity'][$entityType]['exporter'];
+    if (!empty($this->configurationArray['entities'][$entityType]['exporter'])) {
+      $exporterClassName = $this->configurationArray['entities'][$entityType]['exporter'];
     }
 
     return $exporterClassName;
@@ -95,16 +95,15 @@ class Configuration {
       $bundleConfiguration = $this->configurationArray['entity'][$entityType][$bundle];
     }
 
-    $entityConfiguration = $this->configurationArray['entity'][$entityType];
+    $entityConfiguration = $this->configurationArray['entities'][$entityType];
 
     return array_merge_recursive($entityConfiguration, $bundleConfiguration);
   }
 
   public function getExporterForFieldItem($type) {
     $exporter = NULL;
-
-    if (!empty($this->configurationArray['entity']['field_config'][$type])) {
-      $exporter = $this->configurationArray['entity']['field_config'][$type];
+    if (!empty($this->configurationArray['fields'][$type])) {
+      $exporter = $this->configurationArray['fields'][$type];
     }
 
     return $exporter;
@@ -120,13 +119,26 @@ class Configuration {
   }
 
   public function getConfigurationFilePath() {
-    $drupalConfig = \Drupal::service('config.factory')
-      ->get('emigrate.configuration');
+    $drupalConfig = $this->getDrupalConfig();
 
     return self::constructPath(
       $drupalConfig->get('directory_path'),
       $drupalConfig->get('configuration_file_name')
     );
+  }
+
+  /**
+   * @return mixed
+   */
+  public function getDrupalConfig() {
+    return \Drupal::service('config.factory')
+      ->get('emigrate.configuration');
+  }
+
+  public function getRootPath() {
+    $drupalConfig = $this->getDrupalConfig();
+    return $drupalConfig->get('directory_path');
+
   }
 
 }

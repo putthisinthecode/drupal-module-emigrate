@@ -56,7 +56,7 @@ class FilesTree {
     }
     file_put_contents(self::constructpath([
       $rootPath,
-      'index.js',
+      'index.json',
     ]), json_encode($this->index));
   }
 

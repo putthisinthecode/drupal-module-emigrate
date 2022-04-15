@@ -2,52 +2,51 @@
 
 namespace Drupal\emigrate\Exporter\BaseFieldDefinition;
 
-class Image extends DefaultField
-{
-  public function getData()
-  {
-    /**
-     * @TODO : Should return NULL when empty and cardinality is 1
-     */
+class Image extends DefaultField {
+
+  public function getData() {
     $data = [];
 
     $files = $this->fieldItemList->referencedEntities();
 
     if (count($files) > 0) {
-      foreach($files as $file) {
-        $data[] = [
-          'id' => $file->id(),
-          'uri' => $this->removeFilePathPrefix($file->getFileUri()),
-          'name' => $file->getFilename(),
-        ];
-
+      foreach ($files as $file) {
+        $data[] = $this->processEntity($file);
       }
     }
 
-    $data = $this->enforceCardinality($data);
-
-    return $data;
+    return $this->enforceCardinality($data);
   }
 
-  public function getId()
-  {
-    // TODO: Implement getId() method.
-  }
+  public function processEntity($entity) {
 
-  public function getDebugData(): array
-  {
-    $data = [];
-    foreach ($this->element->referencedEntities() as $referencedEntity) {
-      $data[] = [
-        $referencedEntity
-      ];
-    }
-
-    return $data;
+    return [
+      'id' => $this->extractId($entity),
+      'uri' => $this->extractUri($entity),
+      'name' => $this->extractFilename($entity),
+    ];
 
   }
 
-  private function removeFilePAthPrefix($filePath) {
+  /**
+   * @param $entity
+   *
+   * @return mixed
+   */
+  public function extractId($entity) {
+    return $entity->id();
+  }
+
+  /**
+   * @param $entity
+   *
+   * @return false|mixed|string
+   */
+  public function extractUri($entity) {
+    return  $this->getPrefix().$this->removeFilePathPrefix($entity->getFileUri());
+  }
+
+  private function removeFilePathPrefix($filePath) {
     /**
      * @TODO : support public/private files
      */
@@ -58,5 +57,39 @@ class Image extends DefaultField
     }
 
     return $filePath;
+  }
+
+  /**
+   * @param $entity
+   *
+   * @return mixed
+   */
+  public function extractFilename($entity) {
+    return $entity->getFilename();
+  }
+
+  public function getId() {
+    // TODO: Implement getId() method.
+  }
+
+  public function getDebugData() {
+    $data = [];
+    foreach ($this->element->referencedEntities() as $referencedEntity) {
+      $data[] = [
+        $referencedEntity,
+      ];
+    }
+
+    return $data;
+
+  }
+
+  public function getPrefix() {
+    $prefix = '';
+    if (!empty($this->configuration['prefix'])) {
+      $prefix =  $this->configuration['prefix'];
+    }
+
+    return $prefix;
   }
 }

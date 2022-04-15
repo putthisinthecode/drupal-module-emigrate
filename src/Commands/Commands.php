@@ -16,7 +16,6 @@ use Drush\Commands\DrushCommands;
  * of the services file to use.
  */
 class Commands extends DrushCommands {
-
   /**
    * @var Emigrate
    */
@@ -25,11 +24,11 @@ class Commands extends DrushCommands {
   /**
    * Initialize Emigrate objet before each command launch
    *
-   * @hook validate *
+   * @hook command *
    *
    * @param CommandData $commandData
    */
-  public function validate(CommandData $commandData) {
+  public function setContext(CommandData $commandData) {
     $this->emigrate = new Emigrate($this->getCurrentDirectory(), new Drush($this->io()));
   }
 
@@ -106,6 +105,6 @@ class Commands extends DrushCommands {
    */
   public function init() {
     Configuration::create($this->getCurrentDirectory());
-  }
 
+  }
 }

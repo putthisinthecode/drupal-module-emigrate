@@ -41,11 +41,13 @@ class DefaultField {
    */
   private $fieldStorage;
 
+  protected $configuration;
+
   /**
    * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
    * @param string $fieldName
    */
-  public function __construct($entity, $fieldName) {
+  public function __construct($entity, $fieldName, $configuration) {
     $this->entity = $entity;
     $this->fieldName = $fieldName;
     $this->fieldDefinition = $entity->getFieldDefinition($fieldName);
@@ -53,6 +55,7 @@ class DefaultField {
     $this->fieldStorage = $this->fieldConfig->getFieldStorageDefinition();
     $this->fieldItemList = $entity->get($fieldName);
     $this->exporterFactory = ExporterFactory::getDefaultFactory();
+    $this->configuration = $configuration;
   }
 
   public function getId() {
@@ -98,6 +101,8 @@ class DefaultField {
   }
 
   public function getData() {
+    $data = [];
+
     foreach ($this->fieldItemList as $index => $fieldItem) {
       $data[] = $this->processFieldItem($fieldItem);
     }
@@ -121,9 +126,14 @@ class DefaultField {
    *
    * @return array|false|mixed
    */
-  public function enforceCardinality(array $data) {
+  public function enforceCardinality($data) {
     if ($this->getCardinality() == 1) {
-      $data = reset($data);
+      if (!empty($data)) {
+        $data = reset($data);
+      }
+      else {
+        $data = NULL;
+      }
     }
     return $data;
   }

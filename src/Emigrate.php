@@ -4,8 +4,11 @@ namespace Drupal\emigrate;
 
 use Drupal\emigrate\Exporter\ExporterFactory;
 use Drupal\emigrate\Writer\FilesTree;
+use Drupal\emigrate\Utils\FileManagement;
 
 class Emigrate {
+  use FileManagement;
+  const PLUGIN_NAMESPACE = 'Drupal\\emigrate\\Plugin\\';
 
   private $directory;
 
@@ -25,6 +28,8 @@ class Emigrate {
     $this->ui = $ui;
     $this->loadConfiguration();
     ExporterFactory::init();
+    spl_autoload_register([$this, 'loadPlugin']);
+
   }
 
   /**
@@ -97,5 +102,15 @@ class Emigrate {
 
   public function isConfigured() {
     return !empty($this->configuration);
+  }
+
+  private function loadPlugin($class) {
+    if (strpos($class, static::PLUGIN_NAMESPACE) === 0) {
+      $path = str_replace(static::PLUGIN_NAMESPACE, '', $class);
+      $parts = explode('\\', $path);
+      $path = implode(DIRECTORY_SEPARATOR, $parts);
+      $classPath = static::constructPath([$this->getConfiguration()->getRootPath(), 'plugins'], $path).".php";
+      require($classPath);
+    }
   }
 }

@@ -50,16 +50,18 @@ class ExporterFactory {
 
   public function createFromField($entity, $fieldName) {
     $fieldDefinition = $entity->getFieldDefinition($fieldName);
-    if (!empty($this->configuration->getExporterForFieldItem($fieldDefinition
-      ->getType()))) {
-      $className = $this->configuration->getExporterForFieldItem($fieldDefinition
-        ->getType())['exporter'];
+    $exporterConfiguration  =  $this->configuration->getExporterForFieldItem($fieldDefinition
+      ->getType());
+
+    if (!empty($exporterConfiguration)) {
+      $className = $exporterConfiguration['exporter'];
     }
     else {
       $className = DefaultField::class;
+      $exporterConfiguration = [];
     }
 
-    return new $className($entity, $fieldName);
+    return new $className($entity, $fieldName, $exporterConfiguration);
   }
 
   function createFromEntity(EntityInterface $entity) {
